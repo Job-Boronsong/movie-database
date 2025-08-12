@@ -1,4 +1,15 @@
 // inside Home.jsx render area
-<div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-  {movies.map(m => <MovieCard key={m.imdbID} movie={m} />)}
-</div>
+import React from "react";
+
+export default function Home() {
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">Home Page</h1>
+      <p>Search for movies and explore details here.</p>
+    </div>
+  );
+}
+
+
+
+
