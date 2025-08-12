@@ -1,42 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import SearchBar from "./components/SearchBar";
-import { searchMovies } from "./services/movieService";
+// src/App.jsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import MovieDetails from "./pages/MovieDetails";
 
-function App() {
-  const [movies, setMovies] = useState([]);
-  const [error, setError] = useState("");
-
-  const handleSearch = async (query) => {
-    try {
-      const data = await searchMovies(query);
-      if (data.Response === "True") {
-        setMovies(data.Search);
-        setError("");
-      } else {
-        setMovies([]);
-        setError("No movies found.");
-      }
-    } catch (err) {
-      setError("Error fetching movies.");
-    }
-  };
-
+export default function App() {
   return (
-    <div className="p-6">
-      <SearchBar onSearch={handleSearch} />
-      {error && <p className="text-red-500">{error}</p>}
-      <ul>
-        {movies.map((movie) => (
-          <li key={movie.imdbID}>
-            {movie.Title} ({movie.Year})
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/movie/:id" element={<MovieDetails />} />
+      </Routes>
+    </Router>
   );
 }
-
-export default App;
