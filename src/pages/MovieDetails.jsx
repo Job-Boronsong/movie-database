@@ -1,7 +1,8 @@
 // src/pages/MovieDetails.jsx
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getMovieDetails } from "../services/movieService"; // ✅ Ensure this function is implemented
+import { getMovieDetails } from "../services/movieService";
+import Spinner from "../components/Spinner"; // ✅ Import Spinner
 
 export default function MovieDetails() {
   const { id } = useParams();
@@ -33,7 +34,7 @@ export default function MovieDetails() {
   }, [id]);
 
   if (loading) {
-    return <p className="text-center mt-6">Loading...</p>;
+    return <Spinner />; // ✅ Show spinner
   }
 
   if (err) {

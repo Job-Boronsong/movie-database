@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { searchMovies } from "../services/movieService";
 import MovieCard from "../components/MovieCard";
+import Spinner from "../components/Spinner"; // ✅ Import Spinner
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -35,7 +36,7 @@ export default function Home() {
       </button>
 
       {loading ? (
-        <p className="mt-6">Loading...</p>
+        <Spinner /> // ✅ Show spinner
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
           {movies.map((m) => (
@@ -44,7 +45,7 @@ export default function Home() {
         </div>
       )}
 
-      {totalResults > 10 && (
+      {totalResults > 10 && !loading && (
         <div className="flex justify-center gap-4 mt-6">
           <button
             disabled={page === 1}
