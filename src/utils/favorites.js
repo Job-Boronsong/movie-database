@@ -1,25 +1,28 @@
-// src/utils/favorites.js
+const KEY = "favorites";
+
 export const getFavorites = () => {
-    const stored = localStorage.getItem("favorites");
-    return stored ? JSON.parse(stored) : [];
-  };
-  
-  export const addFavorite = (movie) => {
-    const favorites = getFavorites();
-    const exists = favorites.some(fav => fav.imdbID === movie.imdbID);
-    if (!exists) {
-      favorites.push(movie);
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-    }
-  };
-  
-  export const removeFavorite = (id) => {
-    const favorites = getFavorites().filter(movie => movie.imdbID !== id);
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  };
-  
-  export const isFavorite = (id) => {
-    const favorites = getFavorites();
-    return favorites.some(movie => movie.imdbID === id);
-  };
-  
+  try {
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
+export const isFavorite = (id) =>
+  getFavorites().some((m) => m.imdbID === id);
+
+export const addFavorite = (movie) => {
+  const list = getFavorites();
+  if (!list.some((m) => m.imdbID === movie.imdbID)) {
+    list.push(movie);
+    localStorage.setItem(KEY, JSON.stringify(list));
+    window.dispatchEvent(new Event("favorites-updated")); // notify
+  }
+};
+
+export const removeFavorite = (id) => {
+  const list = getFavorites().filter((m) => m.imdbID !== id);
+  localStorage.setItem(KEY, JSON.stringify(list));
+  window.dispatchEvent(new Event("favorites-updated")); // notify
+};

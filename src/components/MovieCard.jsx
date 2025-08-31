@@ -1,9 +1,31 @@
-// src/components/MovieCard.jsx
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { addFavorite, removeFavorite, isFavorite } from "../utils/favorites";
 
-export default function MovieCard({ movie, onFavorite, onRemove, isFavorite }) {
+export default function MovieCard({ movie }) {
+  const [fav, setFav] = useState(false);
+
+  useEffect(() => {
+    setFav(isFavorite(movie.imdbID));
+  }, [movie.imdbID]);
+
+  const toggleFavorite = () => {
+    if (fav) {
+      removeFavorite(movie.imdbID);
+      setFav(false);
+    } else {
+      addFavorite({
+        imdbID: movie.imdbID,
+        Title: movie.Title,
+        Year: movie.Year,
+        Poster: movie.Poster,
+      });
+      setFav(true);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition overflow-hidden">
       <Link to={`/movie/${movie.imdbID}`}>
         <img
           src={movie.Poster !== "N/A" ? movie.Poster : "/placeholder.png"}
@@ -12,26 +34,16 @@ export default function MovieCard({ movie, onFavorite, onRemove, isFavorite }) {
         />
       </Link>
       <div className="p-4">
-        <h2 className="text-lg font-semibold text-gray-800 hover:text-blue-600">
-          {movie.Title}
-        </h2>
+        <h2 className="text-lg font-semibold text-gray-800">{movie.Title}</h2>
         <p className="text-sm text-gray-500 mb-2">{movie.Year}</p>
-
-        {isFavorite ? (
-          <button
-            onClick={() => onRemove(movie.imdbID)}
-            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-          >
-            Remove from Favorites
-          </button>
-        ) : (
-          <button
-            onClick={() => onFavorite(movie)}
-            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
-          >
-            Add to Favorites
-          </button>
-        )}
+        <button
+          onClick={toggleFavorite}
+          className={`px-3 py-1 rounded text-white ${
+            fav ? "bg-red-500 hover:bg-red-600" : "bg-blue-600 hover:bg-blue-700"
+          }`}
+        >
+          {fav ? "Remove from Favorites" : "Add to Favorites"}
+        </button>
       </div>
     </div>
   );
